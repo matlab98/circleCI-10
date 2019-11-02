@@ -1,14 +1,14 @@
 version: 2
- jobs:
-   build:
-     docker:
-       - image: circleci/node:10
-     steps:
-       - checkout
-       - run: 
-            name: "source build"
-            command: |
-                echo "A first hello"
-                ls
-                echo "mensaje 2"
-                pwd
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - run: 
+           name: "source build"
+           command: |
+               echo "A first hello"
+               ls
+               echo "mensaje 2"
+               pwd
