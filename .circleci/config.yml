@@ -1,14 +1,54 @@
 version: 2
-jobs:
-  build:
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - run: 
-           name: "source build"
-           command: |
-               echo "A first hello"
-               ls
-               echo "mensaje 2"
-               pwd
+ jobs:
+    build:
+        docker:
+               - image: circleci/node:10
+        steps:
+           - checkout
+           - add_ssh_keys:
+              fingerprints:
+                - "S95:40:36:d5:16:09:57:fe:bf:cc:01:3f:18:d5:5c:a8"
+           - run: 
+                name: "source build"
+                command: |
+                    echo "A first hello"
+                    touch miarchivo
+                    ls
+                    echo "mensaje 2"
+                    pwd
+                    #scp -o StrictHostKeyChecking=no ./index.html ubuntu@ec2-52-90-108-25.compute-1.amazonaws.com:/var/www/html
+           - persist_to_workspace:
+              # Must be an absolute path, or relative path from working_directory. This is a directory on the container which is 
+              # taken to be the root directory of the workspace.
+              root: /home/circleci
+              # Must be relative path from root
+              paths:
+                - ./project
+          
+                
+    etapa2:
+        docker:
+               - image: circleci/node:10
+        steps:
+           - attach_workspace:
+              # Must be absolute path or relative path from working_directory
+              at: /home/circleci
+
+
+           - checkout
+           - add_ssh_keys:
+              fingerprints:
+                - "S95:40:36:d5:16:09:57:fe:bf:cc:01:3f:18:d5:5c:a8"
+           - run: 
+                name: "prueba docker"
+                command: |
+                    echo "mensaje 3"
+                    ls
+ workflows:
+     version: 2
+     test1:
+         jobs:
+          - build
+          - etapa2:
+              requires:
+                - build
